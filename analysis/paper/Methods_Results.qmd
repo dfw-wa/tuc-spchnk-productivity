@@ -458,7 +458,7 @@ The goals of this work are to:
 
 while accounting for possible effects of brood year.
 
-```{r prelim-ts, fig.height = 8, fig.cap = "Time-series plots showing redds (A), smolts (B), smolts / redd (C), pHOS (D) and the proportion of out-of-basin strays in the Tucanon watershed through time."}
+```{r}
 #| label: fig-prelim-ts
 #| fig-cap: Time series plots of Tucannon River Spring Chinook Salmon data showing spawners (A), smolts (B), smolts/spawner (C), pHOS (D), and the proportion of out-of-basin strays (E) in the Tucannon watershed through time
 #| fig-height: 8
@@ -879,7 +879,8 @@ p1 <-
   # geom_rug(data = mod_df_1,
   #          aes(y = NULL)) +
   geom_point(data = plot_list$resids,
-             aes(y = partial_resid_abund)) +
+             aes(y = partial_resid_abund),
+             shape = 1) +
   geom_vline(xintercept = smolt_capacity$spawners,
              color = "gray20",
              linetype = 2) +
@@ -904,7 +905,8 @@ p1a <-
               alpha = 0.5) +
   geom_line() +
   geom_point(data = plot_list$resids,
-             aes(y = partial_resid)) +
+             aes(y = partial_resid),
+             shape = 1) +
   scale_y_continuous(labels = scales::label_comma(),
                      transform = "log") +
   labs(y = "Smolts / Spawner",
@@ -933,7 +935,8 @@ p2 <-
               alpha = 0.5) +
   geom_line() +
   geom_point(data = plot_list$resids,
-             aes(y = partial_resid)) +
+             aes(y = partial_resid),
+             shape = 1) +
   scale_y_continuous(labels = scales::label_comma(),
                      transform = "log") +
   labs(y = "Smolts / Spawner",
@@ -962,7 +965,8 @@ p3 <-
               alpha = 0.5) +
   geom_line() +
   geom_point(data = plot_list$resids,
-             aes(y = partial_resid)) +
+             aes(y = partial_resid),
+             shape = 1) +
   scale_y_continuous(labels = scales::label_comma(),
                      transform = "log") +
   labs(y = "Smolts / Spawner",
@@ -999,7 +1003,8 @@ p4 <-
               alpha = 0.5) +
   geom_line() +
   geom_point(data = plot_list$resids,
-             aes(y = partial_resid)) +
+             aes(y = partial_resid),
+             shape = 1) +
   scale_y_continuous(labels = scales::label_comma(),
                      transform = "log") +
   labs(y = "Smolts / Spawner",
@@ -1028,7 +1033,8 @@ p5 <-
               alpha = 0.5) +
   geom_line() +
   geom_point(data = plot_list$resids,
-             aes(y = partial_resid)) +
+             aes(y = partial_resid),
+             shape = 1) +
   scale_y_continuous(labels = scales::label_comma(),
                      transform = "log") +
   labs(y = "Smolts / Spawner",
@@ -1059,13 +1065,14 @@ p6 <-
                fill = NULL)) +
   scale_y_continuous(labels = scales::label_comma(),
                      transform = "log") +
+  scale_x_continuous(n.breaks = 4) +
   scale_color_discrete_sequential(palette = "Viridis",
                                  name = "Stray\nProp.",
-                                 guide = guide_legend(nrow = 2)) +
+                                 guide = guide_legend(ncol = 1)) +
   scale_fill_discrete_sequential(palette = "Viridis",
                                  name = "Stray\nProp.",
-                                 guide = guide_legend(nrow = 2)) +
-  # theme(legend.position = "right") +
+                                 guide = guide_legend(ncol = 1)) +
+  theme(legend.position = "right") +
   labs(y = "Smolts / Spawner",
        x = "pHOS")
 ```
@@ -1301,7 +1308,7 @@ p6 <-
 
 ```{r}
 #| label: fig-prod-marg
-#| fig-cap: "Predicted marginal effects of each covariate in the smolts/redd GAM (other covariates are fixed at mean values). Plots B-F have log-transformed the y-axis to improve visability. (A) shows the effect of redds on smolts, (B) shows the effect of the mean redd river kilometer, (C) shows the effect of the standard deviation of redd river kilometer, (D) shows the trend associated with emigration year, and (E) shows the effect of pHOS and proportion of out-of-basin stray hatchery fish. Gray ribbons depict 95% confidence intervals, while points depict the partial residuals for that covariate. The vertical dashed line in A represents the estimated value of redds that lead to the maximum number of smolts which is depicted by the horizontal dashed line. The vertical dashed line in B represents the location of the weir."
+#| fig-cap: "Predicted marginal effects of each covariate in the smolts/spawner GAM (other covariates are fixed at mean values). Plots B-F have log-transformed the y-axis to improve visability. (A) shows the effect of spawners on smolts, (B) shows the effect of the mean redd river kilometer, (C) shows the effect of the standard deviation of redd river kilometer, (D) shows the trend associated with emigration year, and (E) shows the effect of pHOS and proportion of out-of-basin stray hatchery fish. Gray ribbons depict 95% confidence intervals, while points depict the partial residuals for that covariate. The vertical dashed line in A represents the estimated value of spawners (`r smolt_capacity$spawners) that lead to the maximum number of smolts (`r prettyNum(round(smolt_capacity$smolts), big.mark = ',')`) which is depicted by the horizontal dashed line. The vertical dashed line in B represents the location of the weir."
 #| fig-height: 7
 
 
@@ -1316,16 +1323,23 @@ bottom_rows <-
               theme(axis.title.y = element_blank()),
             nrow = 2,
             ncol = 2,
-            label.x = 0.15,
+            # label.x = 0.15,
+            label.y = c(1.04, 1.04, 1.1, 1.1),
             labels = c("B", "C", "D", "E")) |> 
   annotate_figure(left = text_grob("Smolts / Redd", rot = 90))
 
 ggarrange(p1,
           bottom_rows,
-          label.x = 0.1,
+          label.x = 0.05,
           labels = c("A", NULL),
           ncol = 1,
           heights = c(1,2))
+
+# ggsave(here("analysis",
+#             "figures",
+#             "fig_2.pdf"),
+#        width = 6,
+#        height = 7)
 
 ```
 
