@@ -556,6 +556,7 @@ ggarrange(ea_p1 +
           ea_p5 +
             theme(axis.title.x = element_blank()),
           labels = "AUTO",
+          label.y = c(1, 1, 1.2, 1, 1.2),
           nrow = 5,
           ncol = 1) |> 
   annotate_figure(bottom = "Brood Year")
@@ -567,7 +568,7 @@ ggarrange(ea_p1 +
 
 We investigated the influence of hatchery-origin spawners on smolts per spawner by using the proportion of hatchery origin spawners (pHOS) as a covariate.  In addition, we examined the potential effect of out-of-basin hatchery strays to explore the possibility that out-of-basin hatchery fish could have a different impact on smolts per spawner than the integrated hatchery fish of the Tucannon program.  Because pHOS and the proportion of out-of-basin hatchery strays are correlated ($r$ = `r round(cor(mod_df$phos, mod_df$stray_prop), 2)`, @tbl-correlations), instead of using both covariates independently, we included pHOS as a covariate, and the interaction between pHOS and the proportion of strays.  This interaction represents the difference between Tucannon hatchery origin spawners and out-of-basin hatchery origin spawners.
 
-Differences in local rearing habitat within the Tucannon may also contribute to differences in smolts per spawner because of how redds can be distributed across the watershed. The hatchery weir on the Tucannon is located at rkm 59, and may impact adult passage through delays, etc. [@Wilson2024].  The habitat in the upper watershed is more pristine while the habitat in the lower watershed is more heavily impacted.  Because many summary statistics describing these phenomenon (e.g., proportion of redds above/below the weir, proportion in the upper watershed, proportion in the lower watershed, etc.) are highly correlated, we chose to examine the mean rkm of the redds each year as a singular covariate that describes many of these general patterns.  We hypothesize that the greater the mean redd rkm (i.e., due to more redds higher in the watershed, towards better habitat and above the weir), the greater smolts per spawner will be observed.  We also included as a covariate the standard deviation of the redd rkms, as a measure of how concentrated (small value) or dispersed (high value) the redds were within the watershed in a given year.
+We also evaluated whether local rearing habitat conditions or infrastructure, inferred from spawning distribution, influenced smolts-per-spawner. The hatchery weir, located at rkm 59, may impact adult passage through delays, etc. [@Wilson2024]. Additionally, the habitat in the upper watershed is more pristine while the habitat in the lower watershed is more heavily impacted. Because many potential habitat-related metrics (e.g., proportion of redds above/below the weir, proportion in the upper watershed, proportion in the lower watershed, etc.) are highly correlated, we chose to examine the mean rkm of the redds each year as a singular covariate that describes many of these general patterns.  We hypothesize that the greater the mean redd rkm (i.e., due to more redds higher in the watershed, towards better habitat and above the weir), the greater smolts per spawner will be observed.  We also included as a covariate the standard deviation of the redd rkms, as a measure of how concentrated (small value) or dispersed (high value) the redds were within the watershed in a given year.
 
 ```{r}
 #| label: tbl-correlations
@@ -1308,7 +1309,7 @@ p6 <-
 
 ```{r}
 #| label: fig-prod-marg
-#| fig-cap: "Predicted marginal effects of each covariate in the smolts/spawner GAM (other covariates are fixed at mean values). Plots B-F have log-transformed the y-axis to improve visability. (A) shows the effect of spawners on smolts, (B) shows the effect of the mean redd river kilometer, (C) shows the effect of the standard deviation of redd river kilometer, (D) shows the trend associated with emigration year, and (E) shows the effect of pHOS and proportion of out-of-basin stray hatchery fish. Gray ribbons depict 95% confidence intervals, while points depict the partial residuals for that covariate. The vertical dashed line in A represents the estimated value of spawners (`r smolt_capacity$spawners) that lead to the maximum number of smolts (`r prettyNum(round(smolt_capacity$smolts), big.mark = ',')`) which is depicted by the horizontal dashed line. The vertical dashed line in B represents the location of the weir."
+#| fig-cap: Predicted marginal effects of each covariate in the smolts/spawner GAM (other covariates are fixed at mean values). Plots B-F have log-transformed the y-axis to improve visability. (A) shows the effect of spawners on smolts, (B) shows the effect of the mean redd river kilometer, (C) shows the effect of the standard deviation of redd river kilometer, (D) shows the trend associated with emigration year, and (E) shows the effect of pHOS and proportion of out-of-basin stray hatchery fish. Gray ribbons depict 95% confidence intervals, while points depict the partial residuals for that covariate. The vertical dashed line in A represents the estimated value of spawners (845) that lead to the maximum number of smolts (41,286) which is depicted by the horizontal dashed line. The vertical dashed line in B represents the location of the weir.
 #| fig-height: 7
 
 
@@ -1326,7 +1327,7 @@ bottom_rows <-
             # label.x = 0.15,
             label.y = c(1.04, 1.04, 1.1, 1.1),
             labels = c("B", "C", "D", "E")) |> 
-  annotate_figure(left = text_grob("Smolts / Redd", rot = 90))
+  annotate_figure(left = text_grob("Smolts / Spawner", rot = 90))
 
 ggarrange(p1,
           bottom_rows,
