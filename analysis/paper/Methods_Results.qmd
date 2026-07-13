@@ -1,5 +1,5 @@
 ---
-title: "Examination of Selected Factors Affecting Survival and Productivity of Tucannon River Spring Chinook Salmon and Implications for the Future"
+title: "Examination of Selected Factors Affecting Survival and Productivity of Tucannon River Spring Chinook Salmon"
 author:
   - name: Michael Gallinat
     correspondence: true
@@ -22,10 +22,6 @@ format:
   html:
     fig-height: 8
     fig-width: 7
-    # pandoc_args:
-    #   - --lua-filter=/templates/scholarly-metadata.lua
-    #   - --lua-filter=/templates/author-info-blocks.lua
-    #   - --lua-filter=/templates/pagebreak.lua
   pdf: 
     fig-height: 8
     fig-width: 7
@@ -458,122 +454,24 @@ The goals of this work are to:
 
 while accounting for possible effects of brood year.
 
-```{r}
-#| label: fig-prelim-ts
-#| fig-cap: Time series plots of Tucannon River Spring Chinook Salmon data showing spawners (A), smolts (B), smolts/spawner (C), pHOS (D), and the proportion of out-of-basin strays (E) in the Tucannon watershed through time
-#| fig-height: 8
 
+# Methods
 
-ea_p1 <-
-  mod_df |> 
-  ggplot(aes(x = brood_yr,
-             y = spawners)) +
-  geom_point() +
-  geom_line()  +
-  labs(x = "Brood year",
-       y = "Spawners")
+## Study Population
 
-ea_p2 <-
-  mod_df |> 
-  ggplot(aes(x = brood_yr,
-             y = number_smolts)) +
-  geom_point() +
-  geom_line()  +
-  scale_y_continuous(labels = scales::label_comma()) +
-  labs(x = "Brood year",
-       y = "Smolts")
+## Juvenile Emigrant Abundance
 
-ea_p3 <-
-  mod_df |> 
-  ggplot(aes(x = brood_yr,
-             y = smolts_spawner)) +
-  geom_point() +
-  geom_line()  +
-  labs(x = "Brood year",
-       y = "Smolts / Spawner")
+## Data Analysis
 
+### Covariates
 
-ea_p4 <-
-  mod_df |> 
-  ggplot(aes(x = brood_yr,
-             y = phos)) +
-  geom_point() +
-  geom_line()  +
-  labs(x = "Brood year",
-       y = "pHOS")
+We investigated the influence of hatchery-origin spawners on smolts-per-spawner by using the proportion of hatchery origin spawners (pHOS) as a covariate. In addition, we examined the potential effect of out-of-basin hatchery strays to explore the possibility that out-of-basin hatchery fish could have a different impact on smolts-per-spawner than the integrated hatchery fish of the Tucannon program. Because pHOS and the proportion of out-of-basin hatchery strays are correlated ($r$ = `r round(cor(mod_df$phos, mod_df$stray_prop), 2)`), instead of using both covariates independently, we included pHOS as a covariate, and the interaction between pHOS and the proportion of strays. This interaction represents the difference between Tucannon hatchery origin spawners and out-of-basin hatchery origin spawners.
 
-ea_p5 <-
-  mod_df |> 
-  ggplot(aes(x = brood_yr,
-             y = stray_prop)) +
-  geom_point() +
-  geom_line()  +
-  labs(x = "Brood year",
-       y = "Proportion Strays")
+We also evaluated whether local rearing habitat conditions or infrastructure, inferred from spawning distribution, influenced smolts-per-spawner. The hatchery weir, located at rkm 59, may impact adult passage through delays, etc. [@Wilson2024]. Additionally, the habitat in the upper watershed is more pristine while the habitat in the lower watershed is more heavily impacted. Because many potential habitat-related metrics (e.g., proportion of redds above/below the weir, proportion in the upper watershed, proportion in the lower watershed, etc.) are highly correlated, we chose to examine the mean rkm of the redds each year as a singular covariate to summarize the spatial distribution of spawning. We hypothesize that the higher mean redd rkm values, reflecting more spawning in higher quality upstream habitats, would be associated with greater smolts-per-spawner. We also included the standard deviation of the redd rkms, as a measure of how concentrated (small value) or dispersed (high value) the redds were within the watershed in a given year.
 
-ea_p6 <-
-  mod_df |> 
-  ggplot(aes(x = brood_yr,
-             y = total_rps)) +
-  geom_line() +
-  geom_point(aes(color = phos),
-             size = 3) +
-  scale_color_continuous_sequential("Hawaii",
-                                    name = "pHOS") +
-  geom_hline(yintercept = 2,
-             linetype = 2,
-             color = "gray") +
-  # scale_y_continuous(trans = "log",
-  #                    breaks = scales::breaks_pretty()) +
-  labs(x = "Brood year",
-       y = "Total Returns / Spawner")
-
-ea_p7 <-
-  mod_df |> 
-  ggplot(aes(x = brood_yr,
-             y = mean_rkm)) +
-  geom_line() +
-  geom_point(aes(color = phos),
-             size = 3) +
-  scale_color_continuous_sequential("Hawaii",
-                                    name = "pHOS") +
-  geom_hline(yintercept = 59,
-             linetype = 2,
-             color = "gray") +
-  labs(x = "Brood year",
-       y = "Mean Redd RKM")
-
-
-
-ggarrange(ea_p1 +
-            theme(axis.title.x = element_blank()),
-          ea_p2 +
-            theme(axis.title.x = element_blank()),
-          ea_p3 +
-            theme(axis.title.x = element_blank()),
-          ea_p4 +
-            theme(axis.title.x = element_blank()),
-          ea_p5 +
-            theme(axis.title.x = element_blank()),
-          labels = "AUTO",
-          label.y = c(1, 1, 1.2, 1, 1.2),
-          nrow = 5,
-          ncol = 1) |> 
-  annotate_figure(bottom = "Brood Year")
-```
-
-# Methods - Data Analysis
-
-## Covariates
-
-We investigated the influence of hatchery-origin spawners on smolts per spawner by using the proportion of hatchery origin spawners (pHOS) as a covariate.  In addition, we examined the potential effect of out-of-basin hatchery strays to explore the possibility that out-of-basin hatchery fish could have a different impact on smolts per spawner than the integrated hatchery fish of the Tucannon program.  Because pHOS and the proportion of out-of-basin hatchery strays are correlated ($r$ = `r round(cor(mod_df$phos, mod_df$stray_prop), 2)`, @tbl-correlations), instead of using both covariates independently, we included pHOS as a covariate, and the interaction between pHOS and the proportion of strays.  This interaction represents the difference between Tucannon hatchery origin spawners and out-of-basin hatchery origin spawners.
-
-We also evaluated whether local rearing habitat conditions or infrastructure, inferred from spawning distribution, influenced smolts-per-spawner. The hatchery weir, located at rkm 59, may impact adult passage through delays, etc. [@Wilson2024]. Additionally, the habitat in the upper watershed is more pristine while the habitat in the lower watershed is more heavily impacted. Because many potential habitat-related metrics (e.g., proportion of redds above/below the weir, proportion in the upper watershed, proportion in the lower watershed, etc.) are highly correlated, we chose to examine the mean rkm of the redds each year as a singular covariate that describes many of these general patterns.  We hypothesize that the greater the mean redd rkm (i.e., due to more redds higher in the watershed, towards better habitat and above the weir), the greater smolts per spawner will be observed.  We also included as a covariate the standard deviation of the redd rkms, as a measure of how concentrated (small value) or dispersed (high value) the redds were within the watershed in a given year.
-
-```{r}
-#| label: tbl-correlations
-#| tbl-cap: Pearson correlation coefficient between all pairs of covariates.
-
+```{r, eval = F}
+# | label: tbl-correlations
+# | tbl-cap: Pearson correlation coefficient between all pairs of covariates.
 
 # correlations between covariates?
 corr_df <-
@@ -595,13 +493,13 @@ corr_df |>
 
 ```
 
-## Statistical Models
+### Statistical Models
 
-To examine the effects of these covariates on smolts per spawner, we fit a generalized additive model (GAM), using the log of smolts per spawner as the dependent variable, and spline terms for mean rkm of redds, standard deviation of rkm per redds, pHOS, and emigration year. The inclusion of emigration year helps to control for long-term trends and effects that are not accounted for by the other covariates. We used a GAM to allow for the possibility of non-linear relationships between the independent variables and productivity. We also included two fixed terms: the number of spawners and an interaction between pHOS and the proportion of out-of-basin strays. The inclusion of spawners as a fixed term assumes a linear relationship between the log of smolts per spawner and the total number of spawners, which implies a Ricker-like carrying capacity. We made this choice because every ecological system is subject to some carrying capacity constraints [@Chapman2018], and the linearized Ricker model is a common and easily implemented method to incorporate that, while allowing us to allocate more degrees of freedom to the splines of the other covariates.
+To examine the effects of selected covariates on smolts-per-spawner, we fit a generalized additive model (GAM), using the log of smolts-per-spawner as the response variable. We included spline terms for mean rkm of redds, standard deviation of rkm per redds, pHOS, and emigration year.  The inclusion of emigration year helps to control for long-term trends and effects that are not accounted for by the other covariates.  We used a GAM to accommodate potential non-linear relationships between covariates and productivity.  In addition to the spline terms, we included two fixed effects:  the number of spawners and an interaction between pHOS and the proportion of out-of-basin strays.  Including spawners as a fixed term assumes a linear relationship between the log of smolts-per-spawner and the total number of spawners, consistent with a linearized Ricker model and the understanding that every ecological system is subject to some carrying capacity constraints [@Chapman2018].  This approach also allowed us to allocate more degrees of freedom to the splines of the other covariates.  
 
-We also examined the effects of mean smolt length and pHOS on productivity by fitting two more GAMs using total (Age 3+) SAR and R/S as the dependent variables. We included splines for the covariates of the mean smolt length of each brood year and pHOS, as well as brood year. The SAR model was fit using a quasibinomial GAM with a logit link function because the SARs are proportions, whereas for the R/S model, we used a linear GAM with a log link function and also included spawners as a linear parametric covariate, to make this model a linearized Ricker model.
+We also examined the effects of mean smolt length and pHOS on productivity by fitting two more GAMs using SAR and R/S as the dependent variables.  We included spline terms for mean smolt length in each brood year, pHOS, and brood year.  The SAR model was fit using a quasi-binomial GAM with a logit link to account for the proportional nature of the response, while the R/S model was fit using a GAM with a log link.  In both models, spawner abundance was included as a fixed linear parametric term, consistent with a linearized Ricker model structure.
 
-Our goal with these analyses is to examine general patterns of how a few covariates affect the population’s productivity, not necessarily test hypotheses or predict future productivity. The dataset has `r nrow(mod_df_1)` data points; therefore, we limited the number of knots in all splines to a maximum of four for all covariates except emigration or brood year, which we allowed to be larger as that term was meant to capture any other processes and long-term trends. We fit a spline for year, rather than treating year as a random effect, because we expected the effects to be auto-correlated and to capture any long-term trend. The model was fit using R statistical software version 4.3.2 (R Core Team 2023) with the mgcv package, using restricted maximum likelihood methods. We checked the effective degrees of freedom in each model fit using the “k.check()” function to ensure against underfitting, while the use of penalized splines guarded against overfitting. Data and code to reproduce this analysis is available on a GitHub repository (https://zenodo.org/records/17957317). 
+Our goal with these analyses is to examine general patterns of how a few key covariates influence population productivity, rather than to formally test hypotheses or predict future productivity.  The dataset has `r nrow(mod_df_1)` data points; therefore, we limited the number of knots in all splines to a maximum of four for all covariates except emigration or brood year, which we allowed to be larger as that term was meant to capture any other processes and long-term trends.  We fit a spline for year, rather than treating year as a random effect, because we expected the effects to be auto-correlated and to capture any long-term trend.  The models were fit using R statistical software version 4.3.2 [@RCoreTeam2023] with the mgcv package [@Wood2011], using restricted maximum likelihood methods.  We checked the effective degrees of freedom in each model fit using the `k.check( )` function to ensure against underfitting, while the use of penalized splines guarded against overfitting.  Data and code to reproduce this analysis is available on a GitHub repository ([https://github.com/dfw-wa/tuc-spchnk-productivity](https://github.com/dfw-wa/tuc-spchnk-productivity)).
 
 ```{r fit-model-1}
 # fit GAM 
@@ -747,9 +645,9 @@ draw(mod,
 #      cex = 1)
 
 # any underfitting? 
-tibble(name = c("Smolts Per Spawner",
-                "Total SAR",
-                "Total Returns Per Spawner"),
+tibble(name = c("Smolts-per-Spawner",
+                "SAR",
+                "Returns Per Spawner"),
        mod = list(gam_mod_1,
                   gam_mod_2a,
                   gam_mod_2c)) |> 
@@ -792,65 +690,11 @@ ret_capacity <-
 
 # Results
 
-Diagnostic checks for all models were sufficient to ensure we did not underfit any models by overly restricting the number of knots in the various splines. The summary statistics for each model, including the pseudo-$R^2$ value and the percent of deviance explained by each model are provided in @tbl-r2. All models had fairly high pseudo-$R^2$ values (range of 0.61 – 0.88) and explained a high proportion of the variance (74-92%). To examine the results of the GAMs, we plotted the marginal smoothing plots of each covariate to display how the model predictions change as each covariate shifts, holding the others at a constant value. 
+Spring Chinook Salmon total escapement back to the Tucannon River prior to implementation of the hatchery program averaged 687 for the 1985-1987 return years (@fig-tot-escp).  After the hatchery program was in place, escapement fluctuated greatly but averaged 448 for the 1988-2008 return years (@fig-tot-escp).  Primarily due to improved ocean conditions, there was a large increase in escapement for the 2009-2015 return years, with an average return of 1,421 fish (@fig-tot-escp).  The captive broodstock program provided a small, short-term demographic boost to the population, primarily during the 2008-2010 return years (@fig-tot-escp). Returns decreased after this period, dropping down to an average of 300 for the 2016-2024 return years (@fig-tot-escp). The proportion of strays from other hatchery programs increased from approximately 2015 to the present (@fig-tot-escp).
 
-```{r}
-#| label: tbl-r2
-#| tbl-cap: Table of summary statistics for each GAM.
+The number of smolts and spawners tracked each other closely over the time period (@fig-prelim-ts). The number of smolts-per-spawner fluctuated over the years and averaged 93 for the 1985-2006 BYs (@fig-prelim-ts).  Smolts-per-spawner then declined to an average of 31 smolts-per-spawner for the 2007-2016 BYs before trending back up to an average of 55 smolts-per-spawner for the 2017-2022 BYs (@fig-prelim-ts). The proportion of strays and pHOS increased over time as hatchery production ramped up and the number of natural adult returns decreased (@fig-prelim-ts).
 
-
-tibble(name = c("Smolts Per Spawner",
-                "Total SAR",
-                "Total Returns Per Spawner"),
-       mod = list(gam_mod_1,
-                  gam_mod_2a,
-                  gam_mod_2c)) |> 
-  mutate(r2 = map_dbl(mod,
-                      .f = function(x) {
-                        summary(x)$r.sq
-                      }),
-         dev_expl = map_dbl(mod,
-                            .f = function(x) {
-                              summary(x)$dev.expl
-                            })) |> 
-  select(-mod) |> 
-  flextable() |>
-  set_header_labels(name = "Model",
-                    r2 = "R.sq",
-                    dev_expl = "Dev. Explained") |> 
-  colformat_double(j = c(2, 3),
-                   digits = 3)
-
-```
-
-## Smolts Per Spawner
-
-@tbl-sr-coef shows the estimates of parametric coefficients (intercept, slope of linearized Ricker model and the interaction between pHOS and the proportion of out-of-basin strays), while @tbl-sr-edf shows the estimated effective degrees of freedom (edf) of each covariate, and the p-value associated with it. An edf of one is equivalent to a linear function, an edf of two is equivalent of a quadratic function, and higher edfs correspond to more complex functions. Redds had a negative effect on smolts / redd, indicating there is a density dependent effect within this system. The interaction between pHOS and out-of-basin stray proportion was estimated to be negative, but not statistically significant.
-
-```{r}
-#| label: tbl-sr-coef
-#| tbl-cap: "Parametric coefficient estimates for the smolts per spawner GAM from the Tucannon River spring Chinook Salmon analysis."
-
-broom::tidy(gam_mod_1,
-            parametric = T,
-            conf.int = T) |> 
-  clean_names("title") |>
-  flextable() |> 
-  colformat_double(j = -1,
-                   digits = 3)
-```
-
-```{r}
-#| label: tbl-sr-edf
-#| tbl-cap: "Effective degrees of freedom (EDF) and statistical significance tests for smoother terms in the smolts per spawner GAM from the Tucannon River spring Chinook analysis."
-
-
-broom::tidy(gam_mod_1) |> 
-  clean_names("title") |> 
-  flextable() |> 
-  colformat_double(j = -1,
-                   digits = 3)
-```
+## Smolts-per-Spawner
 
 ```{r make-plots}
 plot_list <-
@@ -1078,320 +922,13 @@ p6 <-
        x = "pHOS")
 ```
 
+The GAM for smolts-per-spawner revealed evidence of density-dependent productivity, consistent with carrying capacity limitations, as indicated by a significant negative effect of total spawners on log-transformed smolts-per-spawner (estimate = `r round(coef(gam_mod_1)["spawners"], 3)`, *p* = `r round(summary(gam_mod_1)$p.pv["spawners"], 3)`; @tbl-sr-coef, @fig-prod-marg).  Although the mean redd rkm showed little effect, the smoothed spline of the standard deviation of redd rkm suggest that higher standard deviations (i.e., more dispersed redds) leads to higher predicted values of smolts-per-spawner (@fig-prod-marg). This spline was statistically significant (@tbl-sr-edf). 
 
+Higher levels of pHOS are associated with higher productivity, although when hatchery origin spawners are made up of a higher proportion of out-of-basin strays, that effect is dampened (@tbl-sr-coef, @fig-prod-marg). While the interaction between pHOS and the proportion of out-of-basin strays was not statistically significant (*p* = `r round(summary(gam_mod_1)$p.pv["phos:stray_prop"], 3)`), the negative coefficient (estimate = `r round(coef(gam_mod_1)["phos:stray_prop"], 3)`, SE = `r round(summary(gam_mod_1)$se["phos:stray_prop"], 3)`) suggests a potential negative impact of out-of-basin strays relative to integrated hatchery spawners.
 
-```{r make-plots-old, eval = F}
-term_preds <-
-  predict(gam_mod_1,
-          type = "terms")
-
-# which year had median year effect?
-term_preds |>
-  as_tibble() |> 
-  select(reff = last_col()) |> 
-  add_column(emigration_yr = mod_df_1$emigration_yr,
-             .before = 0) |> 
-  mutate(med_yr = median(reff),
-         mean_yr = mean(reff)) |> 
-  mutate(med_diff = reff - med_yr,
-         mean_diff = reff - mean_yr) |> 
-  arrange(abs(med_diff))
-  # arrange(abs(mean_diff))
-
-# pull out intercept term
-intercept <-
-  attr(term_preds, "constant")
-
-# We use 'working' residuals for GAMs to match the linear predictor scale
-resids <- 
-  residuals(gam_mod_1, type = "working")
-
-covar_noise <-
-  term_preds |>
-  as_tibble() |>
-  select(-spawners) |>
-  rowSums() + intercept
-
-# partial residuals
-partial_resid <-
-  term_preds |>
-  as_tibble() |>
-  mutate(across(everything(),
-                ~ . + resids))
-
-# make a plotting dataset
-plot_sr <-
-  mod_df_1 |>
-  mutate(adj_ln_rs = log(smolts_spawner) - covar_noise,
-         adj_rs = exp(adj_ln_rs + intercept),
-         adj_smolts = spawners * adj_rs)
-
-
-p1 <-
-  predict_gam(gam_mod_1,
-              values = list(spawners = seq(0, max(k, max(mod_df_1$spawners)) * 1.2, by = 1),
-                            emigration_yr = smolt_capacity$emigration_yr),
-              series = "spawners",
-              tran_fun = exp) |> 
-  mutate(smolts = smolts_spawner * spawners,
-         across(ends_with("ci"),
-                ~ . * spawners)) |> 
-  ggplot(aes(x = spawners,
-             y = smolts)) + 
-  geom_ribbon(aes(ymin = lower_ci,
-                  ymax = upper_ci),
-              fill = "lightgray",
-              alpha = 0.5) +
-  geom_line() +
-  # geom_rug(data = mod_df_1,
-  #          aes(y = NULL)) +
-  geom_point(data = plot_sr,
-             # aes(y = smolts)) +
-             aes(y = adj_smolts)) +
-  geom_vline(xintercept = smolt_capacity$spawners,
-             color = "gray20",
-             linetype = 2) +
-  geom_hline(yintercept = smolt_capacity$smolts,
-             color = "gray20",
-             linetype = 2) +
-  scale_y_continuous(labels = scales::label_comma()) +
-  labs(y = "Smolts",
-       x = "Spawners")
-
-p1a <-
-  predict_gam(gam_mod_1,
-              length_out = 50,
-              values = list(spawners = seq(0, max(k, max(mod_df_1$spawners)) * 1.2, by = 1),
-                            # emigration_yr = smolt_capacity$emigration_yr),
-                            emigration_yr = 2008),
-              series = "spawners",
-              tran_fun = exp) |> 
-  ggplot(aes(x = spawners,
-             y = smolts_spawner)) + 
-  geom_ribbon(aes(ymin = lower_ci,
-                  ymax = upper_ci),
-              fill = "lightgray",
-              alpha = 0.5) +
-  geom_line() +
-  geom_rug(data = mod_df_1,
-           aes(y = NULL)) +
-  geom_point(data = plot_sr,
-             aes(y = adj_rs)) +
-  scale_y_continuous(labels = scales::label_comma(),
-                     transform = "log") +
-  labs(y = "Smolts / Spawner",
-       x = "Spawners")
-
-p2 <-
-  predict_gam(gam_mod_1,
-              length_out = 50,
-              series = "phos",
-              tran_fun = exp) |> 
-  ggplot(aes(x = phos,
-             y = smolts_spawner)) + 
-  geom_ribbon(aes(ymin = lower_ci,
-                  ymax = upper_ci),
-              fill = "lightgray",
-              alpha = 0.5) +
-  geom_line() +
-  geom_rug(data = mod_df_1,
-           aes(y = NULL)) +
-  scale_y_continuous(labels = scales::label_comma(),
-                     transform = "log") +
-  labs(y = "Smolts / Spawner",
-       x = "pHOS")
-
-p3 <-
-  predict_gam(gam_mod_1,
-              length_out = 50,
-              series = "mean_rkm",
-              tran_fun = exp) |> 
-  ggplot(aes(x = mean_rkm,
-             y = smolts_spawner)) + 
-  geom_ribbon(aes(ymin = lower_ci,
-                  ymax = upper_ci),
-              fill = "lightgray",
-              alpha = 0.5) +
-  geom_line() +
-  geom_rug(data = mod_df_1,
-           aes(y = NULL)) +
-  scale_y_continuous(labels = scales::label_comma(),
-                     transform = "log") +
-  labs(y = "Smolts / Spawner",
-       x = "Mean Redd RKM") +
-  # geom_vline(xintercept = 40,
-  #            color = "gray20",
-  #            linetype = 2) +
-  # geom_vline(xintercept = 74,
-  #            color = "gray20",
-  #            linetype = 2) +
-  geom_vline(xintercept = 59,
-             color = "gray20",
-             linetype = 2)
-
-
-p4 <-
-  predict_gam(gam_mod_1,
-              length_out = 50,
-              series = "sd_rkm",
-              tran_fun = exp) |> 
-  ggplot(aes(x = sd_rkm,
-             y = smolts_spawner)) + 
-  geom_ribbon(aes(ymin = lower_ci,
-                  ymax = upper_ci),
-              fill = "lightgray",
-              alpha = 0.5) +
-  geom_line() +
-  geom_rug(data = mod_df_1,
-           aes(y = NULL)) +
-  scale_y_continuous(labels = scales::label_comma(),
-                     transform = "log") +
-  labs(y = "Smolts / Spawner",
-       x = "SD Redd RKM")
-
-p5 <-
-  predict_gam(gam_mod_1,
-              values = list(emigration_yr = mod_df_1$emigration_yr),
-              series = "emigration_yr",
-              tran_fun = exp) |> 
-  ggplot(aes(x = emigration_yr,
-             y = smolts_spawner)) + 
-  geom_ribbon(aes(ymin = lower_ci,
-                  ymax = upper_ci),
-              fill = "lightgray",
-              alpha = 0.5) +
-  geom_line() +
-  # geom_point(data = mod_df_1,
-  #            shape = 1) +
-  scale_y_continuous(labels = scales::label_comma(),
-                     transform = "log") +
-  labs(y = "Smolts / Spawner",
-       x = "Emigration Year")
-
-p6 <-
-  predict_gam(gam_mod_1,
-              length_out = 50,
-              series = "phos",
-              values = list(stray_prop = c(0, 0.05, 0.1, 0.2, 0.4)),
-              tran_fun = exp) |> 
-  mutate(across(stray_prop,
-                as.factor)) |> 
-  ggplot(aes(x = phos,
-             y = smolts_spawner,
-             color = stray_prop,
-             fill = stray_prop)) + 
-  geom_ribbon(aes(ymin = lower_ci,
-                  ymax = upper_ci),
-              # fill = "lightgray",
-              color = NA,
-              alpha = 0.2) +
-  geom_line(linewidth = 1) +
-  geom_rug(data = mod_df_1,
-           aes(y = NULL,
-               color = NULL,
-               fill = NULL)) +
-  scale_y_continuous(labels = scales::label_comma(),
-                     transform = "log") +
-  scale_color_discrete_sequential(palette = "Viridis",
-                                 name = "Stray\nProp.",
-                                 guide = guide_legend(nrow = 2)) +
-  scale_fill_discrete_sequential(palette = "Viridis",
-                                 name = "Stray\nProp.",
-                                 guide = guide_legend(nrow = 2)) +
-  # theme(legend.position = "right") +
-  labs(y = "Smolts / Spawner",
-       x = "pHOS")
-
-```
-
-@fig-prod-marg shows the marginal effects of each covariate on predicted smolts per spawner, assuming the others are fixed at their mean values. Although the mean redd rkm showed little effect, the smoothed spline of the standard deviation of redd rkm suggest that higher standard deviations (i.e., more dispersed redds) leads to higher predicted values of smolts per spawner.  The effect of pHOS suggests that higher levels of pHOS are associated with higher productivity, although when hatchery origin spawners are made up of a higher proportion of out-of-basin strays, that effect is dampened. The estimated smolt capacity, based on the fitted Ricker curve (@fig-prod-marg A) is `r prettyNum(round(smolt_capacity$smolts), big.mark = ",")` smolts, which occurs when there are `r round(smolt_capacity$spawners)` spawners in the system.
-
-
-```{r}
-#| label: fig-prod-marg
-#| fig-cap: Predicted marginal effects of each covariate in the smolts/spawner GAM (other covariates are fixed at mean values). Plots B-F have log-transformed the y-axis to improve visability. (A) shows the effect of spawners on smolts, (B) shows the effect of the mean redd river kilometer, (C) shows the effect of the standard deviation of redd river kilometer, (D) shows the trend associated with emigration year, and (E) shows the effect of pHOS and proportion of out-of-basin stray hatchery fish. Gray ribbons depict 95% confidence intervals, while points depict the partial residuals for that covariate. The vertical dashed line in A represents the estimated value of spawners (845) that lead to the maximum number of smolts (41,286) which is depicted by the horizontal dashed line. The vertical dashed line in B represents the location of the weir.
-#| fig-height: 7
-
-
-bottom_rows <-
-  ggarrange(p3 +
-              theme(axis.title.y = element_blank()), 
-            p4 +
-              theme(axis.title.y = element_blank()), 
-            p5 +
-              theme(axis.title.y = element_blank()), 
-            p6 +
-              theme(axis.title.y = element_blank()),
-            nrow = 2,
-            ncol = 2,
-            # label.x = 0.15,
-            label.y = c(1.04, 1.04, 1.1, 1.1),
-            labels = c("B", "C", "D", "E")) |> 
-  annotate_figure(left = text_grob("Smolts / Spawner", rot = 90))
-
-ggarrange(p1,
-          bottom_rows,
-          label.x = 0.05,
-          labels = c("A", NULL),
-          ncol = 1,
-          heights = c(1,2))
-
-# ggsave(here("analysis",
-#             "figures",
-#             "fig_2.pdf"),
-#        width = 6,
-#        height = 7)
-
-```
-
+The estimated smolt capacity, based on the fitted Ricker curve (@fig-prod-marg A) is `r prettyNum(round(smolt_capacity$smolts), big.mark = ",")` smolts, which occurs when there are `r round(smolt_capacity$spawners)` spawners in the system. Visual inspection of the model fit and covariate relationships in @fig-prod-marg further illustrates these patterns and highlights the dominant influence of spawner abundance on smolts-per-spawner over the time series.
 
 ## SAR and Returns/Spawner
-
-For the R/S models, @tbl-rec-spwn-coeff shows the parameter estimates of the intercept and slope that are part of the linearized Ricker model. In the returns / spawner model, spawners had a statistically negative effect, indicating the presence of density dependence sometime between the egg and spawner lifestage. The estimated edf of each covariate for both SAR and R/S models, and the P-values associated with it are found in @tbl-edf-coef. The mean smolt length was statistically significant in the SAR model, but not the R/S model. We found that pHOS was not statistically significant in any model, while the brood year spline was significant in all models.
-
-```{r}
-#| label: tbl-rec-spwn-coeff
-#| tbl-cap: "Coefficient estimates of fixed effects for total returns per spawner GAMs."
-
-
-broom::tidy(gam_mod_2c,
-            parametric = T,
-            conf.int = T) |> 
-  clean_names("title") |> 
-  flextable() |> 
-  colformat_double(j = -1,
-                   digits = 3)
-```
-
-```{r}
-#| label: tbl-edf-coef
-#| tbl-cap: "Effective degrees of freedom and statistical significance tests for the total SAR and returns/spawner GAMs. (** denotes significant, *** denotes highly significant, and N.S. denotes not significant)"
-
-
-mod_list <-
-  tibble(model = c("SAR",
-                   "Returns/Spawner"),
-         returns = "Total") |> 
-  mutate(mod = list(gam_mod_2a,
-                    gam_mod_2c))
-
-mod_list |> 
-  mutate(edf = map(mod,
-                   .f = function(x) {
-                     broom::tidy(x,
-                                 parametric = F)
-                   })) |> 
-  select(-mod) |> 
-  unnest(edf) |>
-  mutate(sig = case_when(between(p.value, 0.01, 0.05) ~ "*",
-                         between(p.value, 0.001, 0.01) ~ "**",
-                         p.value < 0.001 ~ "***",
-                         .default = NA_character_)) |> 
-  clean_names("title") |> 
-  flextable() |> 
-  colformat_double(j = 4:8,
-                   digits = 3)
-```
 
 ```{r sar-marg-plots}
 # colorspace_palette = c("dark3",
@@ -1531,8 +1068,8 @@ by_p1 <-
               color = NA,
               fill = ci_fill,
               alpha = 0.3) +
-  geom_point() +
-  geom_line() +
+  # geom_point() +
+  geom_line(linewidth = 1) +
   geom_point(data = plot_list$resids,
              aes(y = partial_resid),
              shape = 1) +
@@ -1558,8 +1095,8 @@ by_p2 <-
               color = NA,
               fill = ci_fill,
               alpha = 0.3) +
-  geom_point() +
-  geom_line() +
+  # geom_point() +
+  geom_line(linewidth = 1) +
   geom_point(data = plot_list$resids,
              aes(y = partial_resid),
              shape = 1) +
@@ -1628,12 +1165,193 @@ rs_rick_p2 <-
   
 ```
 
-The estimated Ricker curve of R/S, with the negative relationship of spawners on R/S is shown in @fig-rec-marg-spwn, while @fig-rec-marg-all shows the marginal effect of smolt length, pHOS, and brood year on the various recruitment metrics. The estimated maximum returns (@fig-rec-marg-spwn A) are `r round(ret_capacity$returns[ret_capacity$model == "total"])` total (Age 3+) returns, which occur when there are `r round(ret_capacity$spawners[ret_capacity$model == "total"])` spawners respectively in the Tucannon River. Mean smolt length appears to have a positive association with SAR, but a negligible one with R/S. On the other hand, pHOS shows a negative association with SAR, and a non-linear but not significant relationship with R/S. The smoothed spline for brood year shows a few periods with higher SAR and R/S compared with other periods in the time-series.
+The GAMs for R/S also show significant evidence of density-dependent effects on productivity, as indicated by the negative effect of spawners on total R/S as part of the linearized Ricker model (@tbl-rec-spwn-coeff). This effect is consistent with carrying capacity limitations. The estimated maximum returns  are `r round(ret_capacity$returns[ret_capacity$model == "total"])` total (Age 3+) returns, which occur when there are `r round(ret_capacity$spawners[ret_capacity$model == "total"])` spawners (@fig-rec-marg-spwn).
+
+The mean smolt length was statistically significant in the SAR model but not the R/S model (@tbl-edf-coef). The marginal effect plot illustrates that as mean smolt length increases, the predicted SAR also increases although the predicted R/S remains flat (@fig-rec-marg-all A, B).  On the other hand, pHOS shows a negative, but not statistically significant association with SAR, and a non-linear but not significant relationship with R/S (@tbl-edf-coef; @fig-rec-marg-all C, D).  The smoothed spline for brood year shows a few periods with higher SAR and R/S compared with other periods in the time series, which is likely related to favorable ocean conditions (@fig-rec-marg-all E, F).
+
+Diagnostic checks for all models indicated no evidence of underfitting due to overly restrictive spline specification. The summary statistics for each model, including the pseudo-R2 value and the percent of deviance explained by each model are provided in @tbl-r2. All models had fairly high pseudo-$R^2$ values (range of 0.61 – 0.88) and explained a large proportion of the variance (74-92%).
+
+# References
+
+::: {#refs}
+:::
+
+{{< pagebreak >}}
+
+# Figures
+
+```{r}
+#| label: fig-map
+#| fig-cap: Location of the Tucannon River, smolt trap, adult trap, Tucannon Fish Hatchery, and Curl Lake Acclimation Pond (AP) within the Snake River Basin, Washington, USA.
+
+knitr::include_graphics(here("analysis/figures/map_tucannon.png"))
+```
+
+```{r}
+#| label: fig-tot-escp
+#| fig-cap: Total spring Chinook Salmon escapement back to the Tucannon River for natural-origin (NOR), hatchery-origin (HOR), captive broodstock progeny (CB) and stray hatchery spring Chinook Salmon (Strays) for the 1985 to 2024 return years.
+
+knitr::include_graphics(here("analysis/figures/escp_barchart.png"))
+```
+
+
+```{r}
+#| label: fig-prelim-ts
+#| fig-cap: Time series plots of Tucannon River Spring Chinook Salmon data showing spawners (A), smolts (B), smolts/spawner (C), pHOS (D), and the proportion of out-of-basin strays (E) in the Tucannon watershed through time
+#| fig-height: 8
+
+
+ea_p1 <-
+  mod_df |> 
+  ggplot(aes(x = brood_yr,
+             y = spawners)) +
+  geom_point() +
+  geom_line()  +
+  labs(x = "Brood year",
+       y = "Spawners")
+
+ea_p2 <-
+  mod_df |> 
+  ggplot(aes(x = brood_yr,
+             y = number_smolts)) +
+  geom_point() +
+  geom_line()  +
+  scale_y_continuous(labels = scales::label_comma()) +
+  labs(x = "Brood year",
+       y = "Smolts")
+
+ea_p3 <-
+  mod_df |> 
+  ggplot(aes(x = brood_yr,
+             y = smolts_spawner)) +
+  geom_point() +
+  geom_line()  +
+  labs(x = "Brood year",
+       y = "Smolts / Spawner")
+
+
+ea_p4 <-
+  mod_df |> 
+  ggplot(aes(x = brood_yr,
+             y = phos)) +
+  geom_point() +
+  geom_line()  +
+  labs(x = "Brood year",
+       y = "pHOS")
+
+ea_p5 <-
+  mod_df |> 
+  ggplot(aes(x = brood_yr,
+             y = stray_prop)) +
+  geom_point() +
+  geom_line()  +
+  labs(x = "Brood year",
+       y = "Proportion Strays")
+
+ea_p6 <-
+  mod_df |> 
+  ggplot(aes(x = brood_yr,
+             y = total_rps)) +
+  geom_line() +
+  geom_point(aes(color = phos),
+             size = 3) +
+  scale_color_continuous_sequential("Hawaii",
+                                    name = "pHOS") +
+  geom_hline(yintercept = 2,
+             linetype = 2,
+             color = "gray") +
+  # scale_y_continuous(trans = "log",
+  #                    breaks = scales::breaks_pretty()) +
+  labs(x = "Brood year",
+       y = "Total Returns / Spawner")
+
+ea_p7 <-
+  mod_df |> 
+  ggplot(aes(x = brood_yr,
+             y = mean_rkm)) +
+  geom_line() +
+  geom_point(aes(color = phos),
+             size = 3) +
+  scale_color_continuous_sequential("Hawaii",
+                                    name = "pHOS") +
+  geom_hline(yintercept = 59,
+             linetype = 2,
+             color = "gray") +
+  labs(x = "Brood year",
+       y = "Mean Redd RKM")
+
+
+
+ggarrange(ea_p1 +
+            theme(axis.title.x = element_blank()),
+          ea_p2 +
+            theme(axis.title.x = element_blank()),
+          ea_p3 +
+            theme(axis.title.x = element_blank()),
+          ea_p4 +
+            theme(axis.title.x = element_blank()),
+          ea_p5 +
+            theme(axis.title.x = element_blank()),
+          labels = "AUTO",
+          label.y = c(1, 1, 1.2, 1, 1.2),
+          nrow = 5,
+          ncol = 1) |> 
+  annotate_figure(bottom = "Brood Year")
+```
+
+```{r}
+#| label: fig-prod-marg
+#| fig-cap: Predicted marginal effects of each covariate in the smolts/spawner GAM (other covariates are fixed at mean values). Plots B-F have log-transformed the y-axis to improve visability. (A) shows the effect of spawners on smolts, (B) shows the effect of the mean redd river kilometer, (C) shows the effect of the standard deviation of redd river kilometer, (D) shows the trend associated with emigration year, and (E) shows the effect of pHOS and proportion of out-of-basin stray hatchery fish. Gray ribbons depict 95% confidence intervals, while points depict the partial residuals for that covariate. The vertical dashed line in A represents the estimated value of spawners (845) that lead to the maximum number of smolts (41,286) which is depicted by the horizontal dashed line. The vertical dashed line in B represents the location of the weir.
+#| fig-height: 7
+
+
+bottom_rows <-
+  ggarrange(p3 +
+              theme(axis.title.y = element_blank()), 
+            p4 +
+              theme(axis.title.y = element_blank()), 
+            p5 +
+              theme(axis.title.y = element_blank()), 
+            p6 +
+              theme(axis.title.y = element_blank()),
+            nrow = 2,
+            ncol = 2,
+            # label.x = 0.15,
+            label.y = c(1.04, 1.04, 1.1, 1.1),
+            labels = c("B", "C", "D", "E")) |> 
+  annotate_figure(left = text_grob("Smolts / Spawner", rot = 90))
+
+ggarrange(p1,
+          bottom_rows,
+          label.x = 0.05,
+          labels = c("A", NULL),
+          ncol = 1,
+          heights = c(1,2))
+
+# ggsave(here("analysis",
+#             "figures",
+#             "fig_2.pdf"),
+#        width = 6,
+#        height = 7)
+
+```
+
 
 ```{r}
 #| label: fig-rec-marg-spwn
-#| fig-cap:  !expr paste0("Ricker curves depicting the effect of spawner abundance on expected returns. (A) shows the predicted Ricker curve with vertical black dashed lines depicting the estimated number of spawners (", ret_capacity$spawners, ") that result in the maximum returns / spawner (", round(ret_capacity$total_rps, 3), "). (B) shows the linearized Ricker curve for the number of spawners vs the expected returns/spawner. Points represent partial residuals.")
-#| fig-height: 3
+#| fig-cap: !expr paste0("Ricker curve depicting the effect of spawner abundance on expected returns. The vertical black dashed line depicts the estimated number of spawners (", ret_capacity$spawners, ") that result in the maximum returns / spawner (", round(ret_capacity$total_rps, 3), "). Points represent partial residuals.")
+#| fig-height: 4
+#| fig-width: 4
+
+rs_rick_p1
+
+```
+
+
+```{r, eval = F}
+# | label: fig-rec-marg-spwn2
+# | fig-cap: !expr paste0("Ricker curves depicting the effect of spawner abundance on expected returns. (A) shows the predicted Ricker curve with vertical black dashed lines depicting the estimated number of spawners (", ret_capacity$spawners, ") that result in the maximum returns / spawner (", round(ret_capacity$total_rps, 3), "). (B) shows the linearized Ricker curve for the number of spawners vs the expected returns/spawner. Points represent partial residuals.")
+# | fig-height: 3
 
 ggarrange(rs_rick_p1,
           rs_rick_p2,
@@ -1646,7 +1364,7 @@ ggarrange(rs_rick_p1,
 
 ```{r}
 #| label: fig-rec-marg-all
-#| fig-cap: "Marginal effects of SAR (left column) and returns/spawner (right column) models. The different rows show the marginal effect of mean smolt length (top), pHOS (middle), and brood year (bottom). Points represent partial residuals."
+#| fig-cap: "Marginal effects of model covariates on SAR (left column) and returns/spawner (right column) models. The different rows show the marginal effect of mean smolt length (top), pHOS (middle), and brood year (bottom). Points represent partial residuals."
 #| fig-height: 7
 
 ggarrange(length_p1,
@@ -1663,126 +1381,170 @@ ggarrange(length_p1,
 
 ```
 
+{{< pagebreak >}}
+
+# Tables
+
 ```{r}
-#| label: fig-rec-marg-all2
-#| fig-cap: "Marginal effects of SAR (left column) and returns/spawner (right column) models. The different rows show the marginal effect of mean smolt length (top), pHOS (middle), and brood year (bottom). Points represent partial residuals."
-#| fig-height: 7
+#| label: tbl-rkm-descrip
+#| tbl-cap: Description of the five Spring Chinook Salmon habitat strata within the Tucannon River.  The strata are based on water temperature, habitat, and landowner use.
 
-
-all_plot_df <-
-  tibble(model = c("SAR",
-                   "R/S"),
-         mod = list(gam_mod_2a,
-                    gam_mod_2c)) |>
-  crossing(covar = c("mean_smolt_length",
-                     "phos",
-                     "brood_yr")) |> 
-  mutate(plot_list = pmap(.l = list(mod,
-                                    covar,
-                                    model),
-                          .f = function(x, y, z) {
-                            n_preds = case_when(y == "brood_yr" ~ diff(range(mod_df_2$brood_yr)),
-                                                .default = 50)
-                            if(z == "SAR") {
-                              plot_list <-
-                                getPartialResids(mod = x,
-                                                 series = y,
-                                                 length_out = n_preds,
-                                                 link_fun = "logit")
-                              plot_list$preds <-
-                                plot_list$preds |> 
-                                rename(pred = `cbind(suc_w_jacks, number_smolts - suc_w_jacks)`) |> 
-                                mutate(across(c(pred,
-                                                ends_with("ci")),
-                                              plogis))
-                              
-                            } else if(z == "R/S") {
-                              
-                              plot_list <-
-                                getPartialResids(mod = x,
-                                                 series = y,
-                                                 length_out = n_preds,
-                                                 link_fun = "log")
-                              
-                              plot_list$preds <-
-                                plot_list$preds |> 
-                                rename(pred = total_rps) |> 
-                                mutate(across(c(pred,
-                                                ends_with("ci")),
-                                              exp))
-                            }
-                            return(plot_list)
-                          })) |> 
-  mutate(pred = map(plot_list,
-                    "preds"),
-         part_resid = map(plot_list,
-                          "resids"))
-
-
-partial_resid_df <-
-  all_plot_df |> 
-  unnest(part_resid) |>
-  select(-where(is.list)) |> 
-  select(model, covar, 
-         mean_smolt_length,
-         phos,
-         brood_yr,
-         partial_resid) |> 
-  pivot_longer(cols = c(mean_smolt_length:brood_yr),
-               names_to = "pred_covar",
-               values_to = "x") |> 
-  filter(covar == pred_covar) |> 
-  select(-pred_covar) |> 
-  mutate(across(covar,
-                ~ case_match(.,
-                             "brood_yr" ~ "Brood Year",
-                             "mean_smolt_length" ~ "Mean Smolt Length",
-                             "phos" ~ "pHOS",
-                             .default = .)),
-         across(covar,
-                ~ fct_relevel(., "Brood Year",
-                              after = Inf)),
-         across(model,
-                ~ fct_rev(.)))
-
-all_plot_df |> 
-  unnest(pred) |>
-  pivot_longer(cols = c(mean_smolt_length:brood_yr),
-               names_to = "pred_covar",
-               values_to = "x") |>
-  filter(covar == pred_covar) |> 
-  select(-pred_covar) |> 
-  mutate(across(covar,
-                ~ case_match(.,
-                             "brood_yr" ~ "Brood Year",
-                             "mean_smolt_length" ~ "Mean Smolt Length",
-                             "phos" ~ "pHOS",
-                             .default = .)),
-         across(covar,
-                ~ fct_relevel(., "Brood Year",
-                              after = Inf)),
-         across(model,
-                ~ fct_rev(.))) |> 
-  ggplot(aes(x = x,
-             y = pred)) +
-  geom_ribbon(aes(ymin = lower_ci,
-                  ymax = upper_ci),
-              color = NA,
-              fill = ci_fill,
-              alpha = 0.3) +
-  geom_point(data = partial_resid_df,
-             aes(y = partial_resid),
-             shape = 1) +
-  geom_line(linewidth = 1) +
-  # facet_grid(model ~ covar,
-  #            scales = "free")
-  facet_wrap(covar ~ model,
-             scales = "free",
-             ncol = 2) +
-  labs(x = "Covariate Value",
-       y = "Estimated Response")
-
+tibble(
+  Strata = c("Lower",
+             "Marengo",
+             "Hartsock",
+             "HMA",
+             "Wilderness"),
+  `River kilometer` = c("0.0 - 20.1",
+                        "20.1 - 39.9",
+                        "39.9 - 55.5",
+                        "55.5 - 74.5",
+                        "74.5 - 86.3"),
+  `Land Ownership / Usage` = c(rep("Private/Agriculture & Ranching", 3),
+                               "State & Federal/Recreational",
+                               "Federal/Recreation"),
+  Habitat = c("Poor (temperature limited)",
+              "Marginal (temperature limited)",
+              "Fair to Good",
+              "Good to Excellent",
+              "Excellent")
+) |> 
+  flextable() |> 
+  footnote(i = 1,
+           j = 2,
+           value = as_paragraph("River kilometer descriptions:  0.0 - mouth at the Snake River; 20.1 - Territorial Rd.; 39.9 - Marengo bridge; 55.5 - HMA boundary fence; 74.5 - Panjab bridge; 86.3 - Rucherts Camp."),
+           ref_symbols = "*",
+           part = "header")
 ```
 
 
-# References
+```{r}
+#| label: tbl-sr-coef
+#| tbl-cap: "Parametric coefficient estimates for the smolts-per-spawner GAM from the Tucannon River spring Chinook Salmon analysis."
+
+broom::tidy(gam_mod_1,
+            parametric = T,
+            conf.int = T) |>
+  mutate(across(term,
+                str_to_title),
+         across(term,
+                ~ replace_values(.,
+                                 "Phos:Stray_prop" ~ "pHOS:Stray Proportion"))) |> 
+  clean_names("title") |>
+  rename(SE = `Std Error`,
+         `Lower\nConfidence` = `Conf Low`,
+         `Upper\nConfidence` = `Conf High`,
+         `P-value` = `P Value`) |> 
+  flextable() |> 
+  colformat_double(j = -1,
+                   digits = 3)
+```
+
+```{r}
+#| label: tbl-sr-edf
+#| tbl-cap: "Effective degrees of freedom (EDF) and statistical significance tests for smoother terms in the smolts-per-spawner GAM from the Tucannon River spring Chinook analysis."
+
+
+broom::tidy(gam_mod_1) |> 
+  mutate(across(term,
+                ~ str_replace_all(.,
+                              c("_" = " ",
+                                "phos" = "pHOS",
+                                "sd" = "SD",
+                                "yr" = "year")) 
+                  )) |> 
+  clean_names("title") |>
+  rename(`P-value` = `P Value`) |> 
+  flextable() |> 
+  colformat_double(j = -1,
+                   digits = 3)
+```
+
+```{r}
+#| label: tbl-rec-spwn-coeff
+#| tbl-cap: "Coefficient estimates of fixed effects for total returns per spawner GAMs."
+
+
+broom::tidy(gam_mod_2c,
+            parametric = T,
+            conf.int = T) |> 
+  mutate(across(term,
+                str_to_title)) |> 
+  clean_names("title") |> 
+  rename(SE = `Std Error`,
+         `Lower\nConfidence` = `Conf Low`,
+         `Upper\nConfidence` = `Conf High`,
+         `P-value` = `P Value`) |> 
+  flextable() |> 
+  colformat_double(j = -1,
+                   digits = 3)
+```
+
+```{r}
+#| label: tbl-edf-coef
+#| tbl-cap: "Effective degrees of freedom and statistical significance tests for the total SAR and returns/spawner GAMs. (* denotes significant, ** denotes highly significant, and N.S. denotes not significant)"
+
+
+mod_list <-
+  tibble(model = c("SAR",
+                   "Returns / Spawner"),
+         returns = "Total") |> 
+  mutate(mod = list(gam_mod_2a,
+                    gam_mod_2c))
+
+mod_list |> 
+  mutate(edf = map(mod,
+                   .f = function(x) {
+                     broom::tidy(x,
+                                 parametric = F)
+                   })) |> 
+  select(-mod) |> 
+  unnest(edf) |>
+  mutate(sig = case_when(between(p.value, 0.01, 0.05) ~ "*",
+                         between(p.value, 0.001, 0.01) ~ "**",
+                         p.value < 0.001 ~ "**",
+                         .default = "N.S.")) |> 
+  mutate(across(term,
+                ~ str_replace_all(., 
+                                  c("_" = " ",
+                                    "phos" = "pHOS",
+                                    "yr" = "year")))) |>  
+  clean_names("title") |> 
+  rename(`P-value` = "P Value") |> 
+  flextable() |> 
+  colformat_double(j = 4:8,
+                   digits = 3)
+```
+
+
+```{r}
+#| label: tbl-r2
+#| tbl-cap: Table of summary statistics for each GAM.
+
+
+tibble(name = c("Smolts-per-spawner",
+                "SAR",
+                "Returns-per-spawner"),
+       mod = list(gam_mod_1,
+                  gam_mod_2a,
+                  gam_mod_2c)) |> 
+  mutate(r2 = map_dbl(mod,
+                      .f = function(x) {
+                        summary(x)$r.sq
+                      }),
+         dev_expl = map_dbl(mod,
+                            .f = function(x) {
+                              summary(x)$dev.expl
+                            })) |> 
+  select(-mod) |> 
+  flextable() |>
+  set_header_labels(name = "Model",
+                    dev_expl = "Dev. Explained") |> 
+  compose(i = 1,
+          j = "r2",
+          part = "header",
+          value = as_paragraph("R", as_sup("2"))) |> 
+  colformat_double(j = c(2, 3),
+                   digits = 3)
+
+```
