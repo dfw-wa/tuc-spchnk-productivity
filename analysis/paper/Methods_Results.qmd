@@ -96,6 +96,7 @@ set_flextable_defaults(
 ```
 
 ```{r functions}
+# function to get partial residuals for plotting
 getPartialResids <-
   function(mod = NULL,
            series = NULL,
@@ -440,17 +441,17 @@ The goals of this work are to:
 
 1. Examine several covariates to determine if they help explain fluctuations in Tucannon Spring Chinook productivity as measured in smolts/spawner. These possible covariates include:
 
-* the total number of spawners each brood year,
-* pHOS, 
-* proportion of strays, 
-* the mean river kilometer of the redd distribution that year, 
-* the standard deviation of the redd river kilometer and 
-* the year of smolt emigration.
+  * the total number of spawners each brood year,
+  * pHOS, 
+  * proportion of strays, 
+  * the mean river kilometer of the redd distribution that year, 
+  * the standard deviation of the redd river kilometer and 
+  * the year of smolt emigration.
 
 2. Determine if smolt size (e.g. mean fork length) or pHOS has an impact on various recruitment metrics such as:
 
-* total (ages 3-5) SAR,
-* returns per spawner,
+  * total (ages 3-5) SAR,
+  * returns per spawner,
 
 while accounting for possible effects of brood year.
 
@@ -495,11 +496,11 @@ corr_df |>
 
 ### Statistical Models
 
-To examine the effects of selected covariates on smolts-per-spawner, we fit a generalized additive model (GAM), using the log of smolts-per-spawner as the response variable. We included spline terms for mean rkm of redds, standard deviation of rkm per redds, pHOS, and emigration year.  The inclusion of emigration year helps to control for long-term trends and effects that are not accounted for by the other covariates.  We used a GAM to accommodate potential non-linear relationships between covariates and productivity.  In addition to the spline terms, we included two fixed effects:  the number of spawners and an interaction between pHOS and the proportion of out-of-basin strays.  Including spawners as a fixed term assumes a linear relationship between the log of smolts-per-spawner and the total number of spawners, consistent with a linearized Ricker model and the understanding that every ecological system is subject to some carrying capacity constraints [@Chapman2018].  This approach also allowed us to allocate more degrees of freedom to the splines of the other covariates.  
+To examine the effects of selected covariates on smolts-per-spawner, we fit a generalized additive model (GAM), using the log of smolts-per-spawner as the response variable. We included spline terms for mean rkm of redds, standard deviation of rkm per redds, pHOS, and emigration year. The inclusion of emigration year helps to control for long-term trends and effects that are not accounted for by the other covariates. We used a GAM to accommodate potential non-linear relationships between covariates and productivity. In addition to the spline terms, we included two fixed effects: the number of spawners and an interaction between pHOS and the proportion of out-of-basin strays. Including spawners as a fixed term assumes a linear relationship between the log of smolts-per-spawner and the total number of spawners, consistent with a linearized Ricker model and the understanding that every ecological system is subject to some carrying capacity constraints [@Chapman2018]. This approach also allowed us to allocate more degrees of freedom to the splines of the other covariates. 
 
-We also examined the effects of mean smolt length and pHOS on productivity by fitting two more GAMs using SAR and R/S as the dependent variables.  We included spline terms for mean smolt length in each brood year, pHOS, and brood year.  The SAR model was fit using a quasi-binomial GAM with a logit link to account for the proportional nature of the response, while the R/S model was fit using a GAM with a log link.  In both models, spawner abundance was included as a fixed linear parametric term, consistent with a linearized Ricker model structure.
+We also examined the effects of mean smolt length and pHOS on productivity by fitting two more GAMs using SAR and R/S as the dependent variables. We included spline terms for mean smolt length in each brood year, pHOS, and brood year. The SAR model was fit using a quasi-binomial GAM with a logit link to account for the proportional nature of the response, while the R/S model was fit using a GAM with a log link. In both models, spawner abundance was included as a fixed linear parametric term, consistent with a linearized Ricker model structure.
 
-Our goal with these analyses is to examine general patterns of how a few key covariates influence population productivity, rather than to formally test hypotheses or predict future productivity.  The dataset has `r nrow(mod_df_1)` data points; therefore, we limited the number of knots in all splines to a maximum of four for all covariates except emigration or brood year, which we allowed to be larger as that term was meant to capture any other processes and long-term trends.  We fit a spline for year, rather than treating year as a random effect, because we expected the effects to be auto-correlated and to capture any long-term trend.  The models were fit using R statistical software version 4.3.2 [@RCoreTeam2023] with the mgcv package [@Wood2011], using restricted maximum likelihood methods.  We checked the effective degrees of freedom in each model fit using the `k.check( )` function to ensure against underfitting, while the use of penalized splines guarded against overfitting.  Data and code to reproduce this analysis is available on a GitHub repository ([https://github.com/dfw-wa/tuc-spchnk-productivity](https://github.com/dfw-wa/tuc-spchnk-productivity)).
+Our goal with these analyses is to examine general patterns of how a few key covariates influence population productivity, rather than to formally test hypotheses or predict future productivity. The dataset has `r nrow(mod_df_1)` data points; therefore, we limited the number of knots in all splines to a maximum of four for all covariates except emigration or brood year, which we allowed to be larger as that term was meant to capture any other processes and long-term trends. We fit a spline for year, rather than treating year as a random effect, because we expected the effects to be auto-correlated and to capture any long-term trend. The models were fit using R statistical software version 4.3.2 [@RCoreTeam2023] with the mgcv package [@Wood2011], using restricted maximum likelihood methods. We checked the effective degrees of freedom in each model fit using the `k.check( )` function to ensure against underfitting, while the use of penalized splines guarded against overfitting. Data and code to reproduce this analysis is available on a GitHub repository ([https://github.com/dfw-wa/tuc-spchnk-productivity](https://github.com/dfw-wa/tuc-spchnk-productivity)).
 
 ```{r fit-model-1}
 # fit GAM 
@@ -690,9 +691,9 @@ ret_capacity <-
 
 # Results
 
-Spring Chinook Salmon total escapement back to the Tucannon River prior to implementation of the hatchery program averaged 687 for the 1985-1987 return years (@fig-tot-escp).  After the hatchery program was in place, escapement fluctuated greatly but averaged 448 for the 1988-2008 return years (@fig-tot-escp).  Primarily due to improved ocean conditions, there was a large increase in escapement for the 2009-2015 return years, with an average return of 1,421 fish (@fig-tot-escp).  The captive broodstock program provided a small, short-term demographic boost to the population, primarily during the 2008-2010 return years (@fig-tot-escp). Returns decreased after this period, dropping down to an average of 300 for the 2016-2024 return years (@fig-tot-escp). The proportion of strays from other hatchery programs increased from approximately 2015 to the present (@fig-tot-escp).
+Spring Chinook Salmon total escapement back to the Tucannon River prior to implementation of the hatchery program averaged 687 for the 1985-1987 return years (@fig-tot-escp). After the hatchery program was in place, escapement fluctuated greatly but averaged 448 for the 1988-2008 return years (@fig-tot-escp). Primarily due to improved ocean conditions, there was a large increase in escapement for the 2009-2015 return years, with an average return of 1,421 fish (@fig-tot-escp). The captive broodstock program provided a small, short-term demographic boost to the population, primarily during the 2008-2010 return years (@fig-tot-escp). Returns decreased after this period, dropping down to an average of 300 for the 2016-2024 return years (@fig-tot-escp). The proportion of strays from other hatchery programs increased from approximately 2015 to the present (@fig-tot-escp).
 
-The number of smolts and spawners tracked each other closely over the time period (@fig-prelim-ts). The number of smolts-per-spawner fluctuated over the years and averaged 93 for the 1985-2006 BYs (@fig-prelim-ts).  Smolts-per-spawner then declined to an average of 31 smolts-per-spawner for the 2007-2016 BYs before trending back up to an average of 55 smolts-per-spawner for the 2017-2022 BYs (@fig-prelim-ts). The proportion of strays and pHOS increased over time as hatchery production ramped up and the number of natural adult returns decreased (@fig-prelim-ts).
+The number of smolts and spawners tracked each other closely over the time period (@fig-prelim-ts). The number of smolts-per-spawner fluctuated over the years and averaged 93 for the 1985-2006 BYs (@fig-prelim-ts). Smolts-per-spawner then declined to an average of 31 smolts-per-spawner for the 2007-2016 BYs before trending back up to an average of 55 smolts-per-spawner for the 2017-2022 BYs (@fig-prelim-ts). The proportion of strays and pHOS increased over time as hatchery production ramped up and the number of natural adult returns decreased (@fig-prelim-ts).
 
 ## Smolts-per-Spawner
 
@@ -922,7 +923,7 @@ p6 <-
        x = "pHOS")
 ```
 
-The GAM for smolts-per-spawner revealed evidence of density-dependent productivity, consistent with carrying capacity limitations, as indicated by a significant negative effect of total spawners on log-transformed smolts-per-spawner (estimate = `r round(coef(gam_mod_1)["spawners"], 3)`, *p* = `r round(summary(gam_mod_1)$p.pv["spawners"], 3)`; @tbl-sr-coef, @fig-prod-marg).  Although the mean redd rkm showed little effect, the smoothed spline of the standard deviation of redd rkm suggest that higher standard deviations (i.e., more dispersed redds) leads to higher predicted values of smolts-per-spawner (@fig-prod-marg). This spline was statistically significant (@tbl-sr-edf). 
+The GAM for smolts-per-spawner revealed evidence of density-dependent productivity, consistent with carrying capacity limitations, as indicated by a significant negative effect of total spawners on log-transformed smolts-per-spawner (estimate = `r round(coef(gam_mod_1)["spawners"], 3)`, *p* = `r round(summary(gam_mod_1)$p.pv["spawners"], 3)`; @tbl-sr-coef, @fig-prod-marg). Although the mean redd rkm showed little effect, the smoothed spline of the standard deviation of redd rkm suggest that higher standard deviations (i.e., more dispersed redds) leads to higher predicted values of smolts-per-spawner (@fig-prod-marg). This spline was statistically significant (@tbl-sr-edf). 
 
 Higher levels of pHOS are associated with higher productivity, although when hatchery origin spawners are made up of a higher proportion of out-of-basin strays, that effect is dampened (@tbl-sr-coef, @fig-prod-marg). While the interaction between pHOS and the proportion of out-of-basin strays was not statistically significant (*p* = `r round(summary(gam_mod_1)$p.pv["phos:stray_prop"], 3)`), the negative coefficient (estimate = `r round(coef(gam_mod_1)["phos:stray_prop"], 3)`, SE = `r round(summary(gam_mod_1)$se["phos:stray_prop"], 3)`) suggests a potential negative impact of out-of-basin strays relative to integrated hatchery spawners.
 
@@ -1167,7 +1168,7 @@ rs_rick_p2 <-
 
 The GAMs for R/S also show significant evidence of density-dependent effects on productivity, as indicated by the negative effect of spawners on total R/S as part of the linearized Ricker model (@tbl-rec-spwn-coeff). This effect is consistent with carrying capacity limitations. The estimated maximum returns  are `r round(ret_capacity$returns[ret_capacity$model == "total"])` total (Age 3+) returns, which occur when there are `r round(ret_capacity$spawners[ret_capacity$model == "total"])` spawners (@fig-rec-marg-spwn).
 
-The mean smolt length was statistically significant in the SAR model but not the R/S model (@tbl-edf-coef). The marginal effect plot illustrates that as mean smolt length increases, the predicted SAR also increases although the predicted R/S remains flat (@fig-rec-marg-all A, B).  On the other hand, pHOS shows a negative, but not statistically significant association with SAR, and a non-linear but not significant relationship with R/S (@tbl-edf-coef; @fig-rec-marg-all C, D).  The smoothed spline for brood year shows a few periods with higher SAR and R/S compared with other periods in the time series, which is likely related to favorable ocean conditions (@fig-rec-marg-all E, F).
+The mean smolt length was statistically significant in the SAR model but not the R/S model (@tbl-edf-coef). The marginal effect plot illustrates that as mean smolt length increases, the predicted SAR also increases although the predicted R/S remains flat (@fig-rec-marg-all A, B). On the other hand, pHOS shows a negative, but not statistically significant association with SAR, and a non-linear but not significant relationship with R/S (@tbl-edf-coef; @fig-rec-marg-all C, D). The smoothed spline for brood year shows a few periods with higher SAR and R/S compared with other periods in the time series, which is likely related to favorable ocean conditions (@fig-rec-marg-all E, F).
 
 Diagnostic checks for all models indicated no evidence of underfitting due to overly restrictive spline specification. The summary statistics for each model, including the pseudo-R2 value and the percent of deviance explained by each model are provided in @tbl-r2. All models had fairly high pseudo-$R^2$ values (range of 0.61 – 0.88) and explained a large proportion of the variance (74-92%).
 
@@ -1387,7 +1388,7 @@ ggarrange(length_p1,
 
 ```{r}
 #| label: tbl-rkm-descrip
-#| tbl-cap: Description of the five Spring Chinook Salmon habitat strata within the Tucannon River.  The strata are based on water temperature, habitat, and landowner use.
+#| tbl-cap: Description of the five Spring Chinook Salmon habitat strata within the Tucannon River. The strata are based on water temperature, habitat, and landowner use.
 
 tibble(
   Strata = c("Lower",
@@ -1429,7 +1430,7 @@ broom::tidy(gam_mod_1,
                 str_to_title),
          across(term,
                 ~ replace_values(.,
-                                 "Phos:Stray_prop" ~ "pHOS:Stray Proportion"))) |> 
+                                 "Phos:Stray_prop" ~ "pHOS:Stray\nProportion"))) |> 
   clean_names("title") |>
   rename(SE = `Std Error`,
          `Lower\nConfidence` = `Conf Low`,
@@ -1437,7 +1438,9 @@ broom::tidy(gam_mod_1,
          `P-value` = `P Value`) |> 
   flextable() |> 
   colformat_double(j = -1,
-                   digits = 3)
+                   digits = 3) |> 
+  width(j = 1,
+        width = 1.3)
 ```
 
 ```{r}
@@ -1480,6 +1483,8 @@ broom::tidy(gam_mod_2c,
                    digits = 3)
 ```
 
+{{< pagebreak >}}
+
 ```{r}
 #| label: tbl-edf-coef
 #| tbl-cap: "Effective degrees of freedom and statistical significance tests for the total SAR and returns/spawner GAMs. (* denotes significant, ** denotes highly significant, and N.S. denotes not significant)"
@@ -1498,7 +1503,8 @@ mod_list |>
                      broom::tidy(x,
                                  parametric = F)
                    })) |> 
-  select(-mod) |> 
+  select(-mod,
+         -returns) |> 
   unnest(edf) |>
   mutate(sig = case_when(between(p.value, 0.01, 0.05) ~ "*",
                          between(p.value, 0.001, 0.01) ~ "**",
@@ -1512,7 +1518,7 @@ mod_list |>
   clean_names("title") |> 
   rename(`P-value` = "P Value") |> 
   flextable() |> 
-  colformat_double(j = 4:8,
+  colformat_double(j = 3:7,
                    digits = 3)
 ```
 
