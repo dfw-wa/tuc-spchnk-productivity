@@ -3,21 +3,19 @@
 
 # TucSpChnkProductivity
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/KevinSee/TucSpChnkProductivity/master?urlpath=rstudio)
-<!-- add DOI Zenodo link -->
-[![DOI](https://zenodo.org/badge/995709252.svg)](https://doi.org/10.5281/zenodo.17957316)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/dfw-wa/tuc-spchnk-productivity/main?urlpath=rstudio)
 
 This repository contains the data and code for our paper:
 
-> Gallinat, M.P. and K.E. See, (2026). *Examination of Selected Factors
-> Affecting Survival and Productivity of Tucannon River Spring Chinook
-> Salmon*. Name of journal/book <https://doi.org/xxx/xxx>
+> Gallinat, M.P. and K.E. See, (2026). *Survival and Productivity of
+> Tucannon River Spring Chinook Salmon*. North American Journal of
+> Fisheries Management <https://doi.org/xxx/xxx>
 
 Our pre-print is online here:
 
-> Gallinat, M.P. and K.E. See, (2026). *Examination of Selected Factors
-> Affecting Survival and Productivity of Tucannon River Spring Chinook
-> Salmon*. Name of journal/book, Accessed 13 Jul 2026. Online at
+> Gallinat, M.P. and K.E. See, (2026). *Survival and Productivity of
+> Tucannon River Spring Chinook Salmon*. North American Journal of
+> Fisheries Management, Accessed 23 Sep 2026. Online at
 > <https://doi.org/xxx/xxx>
 
 ### How to cite
@@ -25,9 +23,8 @@ Our pre-print is online here:
 Please cite this compendium as:
 
 > Gallinat, M.P. and K.E. See, (2026). *Compendium of R code and data
-> for Examination of Selected Factors Affecting Survival and
-> Productivity of Tucannon River Spring Chinook Salmon*. Accessed 13 Jul
-> 2026. Online at <https://doi.org/xxx/xxx>
+> for Survival and Productivity of Tucannon River Spring Chinook
+> Salmon*. Accessed 23 Sep 2026. Online at <https://doi.org/xxx/xxx>
 
 ## Contents
 

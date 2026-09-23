@@ -11,23 +11,20 @@ knitr::opts_chunk$set(
   fig.path = "README-"
 )
 # Please put your title here to include it in the file below.
-Title <- "Examination of Selected Factors Affecting Survival and Productivity of Tucannon River Spring Chinook Salmon"
+Title <- "Survival and Productivity of Tucannon River Spring Chinook Salmon"
 ```
 
 # TucSpChnkProductivity
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/KevinSee/TucSpChnkProductivity/master?urlpath=rstudio)
-<!-- add DOI Zenodo link -->
-[![DOI](https://zenodo.org/badge/995709252.svg)](https://doi.org/10.5281/zenodo.17957316)
-
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/dfw-wa/tuc-spchnk-productivity/main?urlpath=rstudio)
 
 This repository contains the data and code for our paper:
 
-> Gallinat, M.P. and K.E. See, (2026). _`r Title`_. Name of journal/book <https://doi.org/xxx/xxx>
+> Gallinat, M.P. and K.E. See, (2026). _`r Title`_. North American Journal of Fisheries Management <https://doi.org/xxx/xxx>
 
 Our pre-print is online here:
 
-> Gallinat, M.P. and K.E. See, (2026). _`r Title`_. Name of journal/book, Accessed `r format(Sys.Date(), "%d %b %Y")`. Online at <https://doi.org/xxx/xxx>
+> Gallinat, M.P. and K.E. See, (2026). _`r Title`_. North American Journal of Fisheries Management, Accessed `r format(Sys.Date(), "%d %b %Y")`. Online at <https://doi.org/xxx/xxx>
 
 
 ### How to cite
